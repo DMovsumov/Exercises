@@ -11,7 +11,7 @@ canvas.addEventListener('click', (e) => {
     const { data: [red, green, blue, alpha] } = ctx.getImageData(x, y, 1, 1);
     const color = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 
-    canvas2.style.backgroundColor = color
+    canvas2.style.backgroundColor = color;
 })
 
 /** Количество звезд и их цвет*/
@@ -47,11 +47,10 @@ function createStar(x, y, radius, color) {
         const r = (i % 2 === 0) ? radius : (radius / 2);
         const a = Math.PI * i / 5;
         ctx.lineTo(x + r * Math.sin(a), y + r * Math.cos(a));
-    }
-    ;
+    };
     ctx.closePath();
     ctx.fillStyle = color;
     ctx.strokeStyle = color;
     ctx.fill();
-    ctx.stroke()
+    ctx.stroke();
 }
