@@ -1,6 +1,20 @@
 const canvas = document.getElementById('canvas1')
+const canvas2 = document.getElementById('canvas2')
 const ctx = canvas.getContext('2d')
 
+canvas.addEventListener('click', (e) => {
+    /** Получаем кординаты клика*/
+    const x = e.offsetX;
+    const y = e.offsetY;
+
+    /** Получаем пиксельные данные области canvas и вытаскиваем цвет через деструктуризацию и создаем переменную */
+    const { data: [red, green, blue, alpha] } = ctx.getImageData(x, y, 1, 1);
+    const color = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+
+    canvas2.style.backgroundColor = color
+})
+
+/** Количество звезд и их цвет*/
 const stars = [
     {color: 'red'},
     {color: 'blue'},
@@ -9,54 +23,35 @@ const stars = [
     {color: 'black'},
 ];
 
-const width = canvas.width; /** Ширина канваса*/
-const height = canvas.height; /** Высота канваса*/
-
-console.log(width, height)
-
 !(() => {
+    const width = canvas.width;
     /** Ширина области в которой у нас будет находиться звезда, а так как высота у нас равна ширине то и высота */
     const starsArea = width / stars.length;
 
-    /** Получаем радиус от центра до крайней точки области*/
+    /** Получаем радиус от центра до крайней точки границы*/
     const radius = starsArea / 2;
 
     /** Рисуем */
-   for (let i = 0; i <= stars.length; i++) {
-       const x = radius * i + starsArea
-       const y = 60
-       drawStar(ctx, x, y, radius, stars[i].color);
+   for (let i = 0; i <= stars.length - 1; i++) {
+       const x = radius + starsArea * i /** Для того чтобы звезды не слипались */
+       const y = radius
+       createStar(x, y, radius, stars[i].color);
    }
-
-
-
-    console.log(starsArea)
 })()
 
-
-// drawStar(ctx, 70, 70, 5, 60, 'mediumseagreen');
-// drawStar(ctx, 70, 70, 5, 50, 'mediumseagreen');
-// drawStar(ctx,100,100,5,50,25,'mediumseagreen',9);
-// drawStar(ctx,150,200,8,50,25,'skyblue', 3);
-// drawStar(ctx,225,75,16,50,20,'coral', 0);
-// drawStar(ctx,300,200,16,50,40,'gold',3);
-
-
-function drawStar(ctx, x, y, radius, color, line) {
-    // define the star
+function createStar(x, y, radius, color) {
     ctx.beginPath();
     ctx.moveTo(x, y + radius);
-    for (let i = 0; i < 10; i++) { // 5 * 2 потому что у 5 конечной звезды 10 углов
+    /** 5 * 2 потому что у 5 конечной звезды 10 углов */
+    for (let i = 0; i < 10; i++) {
         const r = (i % 2 === 0) ? radius : (radius / 2);
         const a = Math.PI * i / 5;
         ctx.lineTo(x + r * Math.sin(a), y + r * Math.cos(a));
     }
     ;
     ctx.closePath();
-    // draw
     ctx.fillStyle = color;
-    ctx.fill();
     ctx.strokeStyle = color;
-    ctx.lineWidth = line;
+    ctx.fill();
     ctx.stroke()
 }
