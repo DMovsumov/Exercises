@@ -4,10 +4,32 @@ const fs = require('fs')
 const path = require('path')
 
 router.get('/', async (ctx) => {
-    const data = fs.readFileSync(path.join(__dirname, '../../data/', 'data.json'));
-    const users = JSON.parse(data)
+    try {
+        const data = fs.readFileSync(path.join(__dirname, '../../data/', 'data.json'));
+        const users = JSON.parse(data)
 
-    ctx.body = users
+        ctx.body = users
+    } catch (e) {
+        ctx.body = 'error'
+    }
+})
+
+.delete('/:id', async (ctx) => {
+    try {
+        const { id } = ctx.params
+        const data = fs.readFileSync(path.join(__dirname, '../../data/', 'data.json'));
+        const users = JSON.parse(data)
+
+        const index = users.findIndex(item => item.id === id)
+        users.splice(index, 1)
+
+        /** Запись обновленных юзеров */
+        // fs.writeFile(path.join(__dirname, '../../data/', 'data.json'), JSON.stringify(users), () => console.log('Write success'))
+
+        ctx.body = users
+    } catch (e) {
+        ctx.body = 'Delete Error'
+    }
 })
 
 module.exports = router.routes()
