@@ -1,6 +1,6 @@
 const table = document.querySelector('#users_table')
 const users = new Users();
-const userView = new UserItemView();
+const userView = new UserItem();
 
 !(async () => {
     const userData = await users.fetchUsers()

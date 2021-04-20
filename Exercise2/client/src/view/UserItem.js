@@ -1,4 +1,4 @@
-class UserItemView {
+class UserItem {
     constructor() {
 
     }
