@@ -1,0 +1,22 @@
+body {
+    display: flex;
+    justify-content: center;
+    font-size: 18px;
+}
+
+table {
+    width: 40vw;
+    border: 1px solid #000;
+}
+
+.name_table {
+    width: 25%;
+}
+
+.phone_table {
+    width: 40%;
+}
+
+thead {
+    background: red;
+}
