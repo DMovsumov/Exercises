@@ -7,7 +7,7 @@ env.config({path: './.env'})
 try {
     const { API_PORT } = process.env;
 
-    const port = parseInt(API_PORT, 10) || 4000;
+    const port = parseInt(API_PORT, 10) || 4500;
 
     const server = new Koa();
 
