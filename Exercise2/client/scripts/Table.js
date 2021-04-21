@@ -1,5 +1,6 @@
+const table = document.querySelector('#users_table')
+
 const renderTable = async (users) => {
-    const table = document.querySelector('#users_table')
     /** Очистка таблицы при обновлении */
     table.innerHTML = ''
 
@@ -8,28 +9,48 @@ const renderTable = async (users) => {
         table.insertAdjacentHTML('afterbegin', itemView)
     })
 
-    await deleteUser()
+    await deleteBlockUser()
     await editUser()
 }
 
 const editUser = () => {
-    const editBtn = document.querySelectorAll('.edit_btn')
+    /** Получаем строки юзеров */
+    const userBlocks = document.querySelectorAll('.user_block')
 
-    editBtn.forEach(btn => {
-        const tr = btn.parentElement.parentElement
-        const inputName = tr.querySelector('.input_name')
-        const inputPhone = tr.querySelector('.input_phone')
+    /** Перебираем и взаимодействуем */
+    userBlocks.forEach(block => {
+        const ediBtn = block.querySelector('.edit_btn')
+        const inputName = block.querySelector('.input_name')
+        const inputPhone = block.querySelector('.input_phone')
+        const id = block.id
 
-        btn.addEventListener('click', async (e) => {
+        ediBtn.addEventListener('click', async (e) => {
             e.preventDefault()
-            inputName.removeAttribute('readonly')
-            inputPhone.removeAttribute('readonly')
-            console.log(inputName, inputPhone)
+
+            if (e.target.classList.contains('save_btn')) {
+
+                const result = useValidation(inputName.value, inputPhone.value)
+
+                if (result.error) {
+                    showError(block, result.text)
+                } else {
+                    e.target.classList.remove('save_btn')
+                    e.target.textContent = 'Редактировать'
+                    const users = await putUser(id, {name: inputName.value, phone: inputPhone.value})
+                    await renderTable(users)
+                }
+
+            } else {
+                inputName.removeAttribute('readonly')
+                inputPhone.removeAttribute('readonly')
+                e.target.classList.add('save_btn')
+                e.target.textContent = 'Сохранить'
+            }
         })
     })
 }
 
-const deleteUser = () => {
+const deleteBlockUser = () => {
     const deleteBtn = document.querySelectorAll('.delete_btn')
 
     deleteBtn.forEach(btn => {
@@ -38,11 +59,7 @@ const deleteUser = () => {
         btn.addEventListener('click', async (e) => {
             e.preventDefault()
 
-            const response = await fetch(`http://localhost:4500/users/${id}`, {
-                method: 'delete'
-            })
-
-            const data = await response.json()
+            const data = await deleteUser(id);
             await renderTable(data)
         })
     })
@@ -51,7 +68,7 @@ const deleteUser = () => {
 const renderItem = (user) => {
     const {id, name, phone} = user
     return `
-        <tr id="${id}">
+        <tr id="${id}" class="user_block">
             <th>
                 <input type="text" value="${name}" class="input_name" readonly title="Name">
             </th>
@@ -64,4 +81,8 @@ const renderItem = (user) => {
             </th>
         </tr>
     `
+}
+
+const showError = (place, text) => {
+    return place.insertAdjacentHTML('afterend', `<span style="color: red" class="text_error">${text}<span/>`)
 }
