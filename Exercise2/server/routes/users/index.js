@@ -20,10 +20,10 @@ router.get('/', async (ctx) => {
         const data = fs.readFileSync(path.join(__dirname, '../../data/', 'data.json'));
         const users = JSON.parse(data)
 
-        const index = users.findIndex(item => item.id === id)
+        const index = users.findIndex(item => item.id === Number(id))
         users.splice(index, 1)
 
-        /** Запись обновленных юзеров */
+        /** Запись обновленных юзеров в файл */
         // fs.writeFile(path.join(__dirname, '../../data/', 'data.json'), JSON.stringify(users), () => console.log('Write success'))
 
         ctx.body = users
