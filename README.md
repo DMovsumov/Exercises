@@ -38,8 +38,8 @@ i. Пакет: “исходник” на CoffeeScript и скомпилиро�
 
 **cd Exercise2/server**
 
-**npm install или yarn
-yarn start или npm run start**
+**npm install** или **yarn**
+затем **yarn start** или **npm run start**
 
 Для запуска клиента перейдите:
 
